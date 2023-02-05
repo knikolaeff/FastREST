@@ -11,49 +11,49 @@ class Book(BaseModel):
 
 
 dummy_data = {
-    1: {
-        "Title": "Crime and Punishment",
-        "Author": "Fedor Dostoefieldsky",
-        "Price:": 10.12,
-    },
-    2: {
-        "Title": "Complete Poetry of Edgar Allan Poe",
-        "Author": "Edgar Allan Poe",
-        "Price:": 4.99,
-    },
-    3: {
-        "Title": "Pride and Prejustice",
-        "Author": "Jane Austen",
-        "Price:": 5.99
-    },
+    # 1: {
+    #     "Title": "Crime and Punishment",
+    #     "Author": "Fedor Dostoefieldsky",
+    #     "Price:": 10.12,
+    # },
+    # 2: {
+    #     "Title": "Complete Poetry of Edgar Allan Poe",
+    #     "Author": "Edgar Allan Poe",
+    #     "Price:": 4.99,
+    # },
+    # 3: {
+    #     "Title": "Pride and Prejustice",
+    #     "Author": "Jane Austen",
+    #     "Price:": 5.99
+    # },
 
-    4: {
-        "Title": "To Kill a Mockingbird",
-        "Author": "Harper Lee",
-        "Price:": 9.99
-    },
+    # 4: {
+    #     "Title": "To Kill a Mockingbird",
+    #     "Author": "Harper Lee",
+    #     "Price:": 9.99
+    # },
 }
 
 app = FastAPI()
 
 
 @app.get("/")
-def root():
+async def root():
     return {"message": "Hello World!"}
 
 
 @app.get("/about")
-def about():
+async def about():
     return {"info": "This API is exremely useful and cool"}
 
 
 @app.get("/catalog")
-def get_all_items():
+async def get_all_items():
     return dummy_data
 
 
 @app.get("/catalog/id/{item_id}")
-def get_item_by_id(
+async def get_item_by_id(
     item_id: int = Path(
         None,
         description="An ID of the item in a catalog",
@@ -64,15 +64,15 @@ def get_item_by_id(
 
 
 @app.get("/catalog/query")
-def get_item_by_author(name: Optional[str] = None):
+async def get_item_by_author(name: Optional[str] = None):
     for _, inner in dummy_data.items():
-        if inner["Author"] == name:
+        if inner["Author"].name == name:
             return inner
     return {"error": "Not Found"}
 
 
 @app.post("/catalog/new/{item_id}")
-def create_new_book(
+async def create_new_book(
     book: Book, item_id: int = Path(None, gt=0)
 ):
     if item_id not in dummy_data:
