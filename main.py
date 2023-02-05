@@ -3,8 +3,8 @@ from fastapi import FastAPI, Path
 dummy_data = {
     1: {
         "Title": "Crime and Punishment",
-        "Author": "Fedor Dostoevsky",
-        "Price:": {10.12}
+        "Author": "Fedor Dostoefieldsky",
+        "Price:": 10.12
     },
     2: {
         "Title": "Complete Poetry of Edgar Allan Poe",
@@ -42,6 +42,6 @@ def get_item_by_id(item_id: int = Path(None, description="An ID of the item in a
 
 @app.get("/catalog/query")
 def get_item_by_author(name: str = None):
-    for item_id in dummy_data:
-        if dummy_data[item_id]["Author"] == name:
-            return dummy_data[item_id]
+    for _, inner in dummy_data.items():
+        if inner["Author"] == name:
+            return inner
