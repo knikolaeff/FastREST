@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Path
 from typing import Optional
 
+from fastapi import FastAPI, Path
+from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
 
@@ -9,8 +10,7 @@ class Book(BaseModel):
     author: str
     price: float
 
-
-dummy_data = {
+dummy_data: dict[int, Book] = {
     1: Book(title="Crime and Punishment", author="Fedor Dostoevsky", price=10.12),
     2: Book(title="Complete Poetry of Edgar Allan Poe", author="Edgar Allan Poe", price=4.99),
     3: Book(title="Pride and Prejustice", author="Jane Austen", price=5.99),
@@ -56,4 +56,9 @@ async def create_new_book(book: Book, item_id: int = Path(None, gt=0)):
         dummy_data[item_id] = book
     else:
         return {"error": "This ID already exists"}
+    return dummy_data[item_id]
+
+@app.put("/catalog/edit/{item_id}")
+async def edit_book(book: Book, item_id: int):
+    dummy_data[item_id] = book
     return dummy_data[item_id]
