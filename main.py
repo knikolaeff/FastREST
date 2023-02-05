@@ -59,6 +59,13 @@ async def create_new_book(book: Book, item_id: int = Path(None, gt=0)):
     return dummy_data[item_id]
 
 @app.put("/catalog/edit/{item_id}")
-async def edit_book(book: Book, item_id: int):
+async def edit_book(book: Book, item_id: int = Path(None, gt=0)):
     dummy_data[item_id] = book
     return dummy_data[item_id]
+
+@app.delete("/catalog/delete/{item_id}")
+async def delete_book(item_id: int):
+    if item_id not in dummy_data:
+        return {"error": "This ID does not exist"}
+    
+    del dummy_data[item_id]
