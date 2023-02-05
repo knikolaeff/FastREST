@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Path
+from typing import Optional
 
 dummy_data = {
     1: {
@@ -36,12 +37,17 @@ def root():
 def about():
     return {"info": "This API is exremely useful and cool"}
 
+@app.get("/catalog")
+def get_all_items():
+    return dummy_data
+
 @app.get("/catalog/id/{item_id}")
 def get_item_by_id(item_id: int = Path(None, description="An ID of the item in a catalog", ge=min_id, le=max_id)):
     return dummy_data[item_id]
 
 @app.get("/catalog/query")
-def get_item_by_author(name: str = None):
+def get_item_by_author(name: Optional[str] = None):
     for _, inner in dummy_data.items():
         if inner["Author"] == name:
             return inner
+    return {"error": "Not Found"}
