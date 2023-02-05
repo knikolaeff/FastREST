@@ -23,8 +23,8 @@ dummy_data = {
     }
 }
 
-min_id = min(list(dummy_data.keys()))
-max_id = max(list(dummy_data.keys()))
+min_id = min(dummy_data.keys())
+max_id = max(dummy_data.keys())
 
 app = FastAPI()
 
