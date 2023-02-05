@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Path
 
 dummy_data = {
     1: {
@@ -23,6 +23,9 @@ dummy_data = {
     }
 }
 
+min_id = min(list(dummy_data.keys()))
+max_id = max(list(dummy_data.keys()))
+
 app = FastAPI()
 
 @app.get("/")
@@ -34,5 +37,5 @@ def about():
     return {"info": "This API is exremely useful and cool"}
 
 @app.get("/catalog/{item_id}")
-def get_item_by_id(item_id: int):
+def get_item_by_id(item_id: int = Path(description="An ID of the item in a catalog"), ge=min_id, le=max_id):
     return dummy_data[item_id]
