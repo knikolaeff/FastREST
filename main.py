@@ -34,13 +34,6 @@ dummy_data = {
     },
 }
 
-
-def update_id_constraints():
-    min_id = min(dummy_data.keys())
-    max_id = max(dummy_data.keys())
-    return min_id, max_id
-
-
 app = FastAPI()
 
 
@@ -64,8 +57,7 @@ def get_item_by_id(
     item_id: int = Path(
         None,
         description="An ID of the item in a catalog",
-        ge=update_id_constraints()[0],
-        le=update_id_constraints()[1],
+        gt=0
     )
 ):
     return dummy_data[item_id]
@@ -81,10 +73,10 @@ def get_item_by_author(name: Optional[str] = None):
 
 @app.post("/catalog/new/{item_id}")
 def create_new_book(
-    book: Book, item_id: int = Path(None, gt=update_id_constraints()[1])
+    book: Book, item_id: int = Path(None, gt=0)
 ):
-    dummy_data[item_id] = {
-        "Title": book.title,
-        "Author": book.author,
-        "Price": book.price,
-    }
+    if item_id not in dummy_data:
+        dummy_data[item_id] = book
+    else:
+        return {"error": "This ID already exists"}
+    return dummy_data[item_id]
