@@ -1,7 +1,6 @@
 from typing import Optional
 
 from fastapi import FastAPI, Path
-from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
 
@@ -35,7 +34,7 @@ async def get_all_items():
     return dummy_data
 
 
-@app.get("/catalog/id/{item_id}")
+@app.get("/catalog/{item_id}")
 async def get_item_by_id(
     item_id: int = Path(None, description="An ID of the item in a catalog", gt=0)
 ):
@@ -49,8 +48,9 @@ async def get_item_by_author(name: Optional[str] = None):
             return inner
     return {"error": "Not Found"}
 
+# TODO find a way to combine /catalog/query and /catalog
 
-@app.post("/catalog/new/{item_id}")
+@app.post("/catalog/{item_id}")
 async def create_new_book(book: Book, item_id: int = Path(None, gt=0)):
     if item_id not in dummy_data:
         dummy_data[item_id] = book
@@ -58,12 +58,12 @@ async def create_new_book(book: Book, item_id: int = Path(None, gt=0)):
         return {"error": "This ID already exists"}
     return dummy_data[item_id]
 
-@app.put("/catalog/edit/{item_id}")
+@app.put("/catalog/{item_id}")
 async def edit_book(book: Book, item_id: int = Path(None, gt=0)):
     dummy_data[item_id] = book
     return dummy_data[item_id]
 
-@app.delete("/catalog/delete/{item_id}")
+@app.delete("/catalog/{item_id}")
 async def delete_book(item_id: int):
     if item_id not in dummy_data:
         return {"error": "This ID does not exist"}
