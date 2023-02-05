@@ -37,5 +37,5 @@ def about():
     return {"info": "This API is exremely useful and cool"}
 
 @app.get("/catalog/{item_id}")
-def get_item_by_id(item_id: int = Path(description="An ID of the item in a catalog"), ge=min_id, le=max_id):
+def get_item_by_id(item_id: int = Path(None, description="An ID of the item in a catalog", ge=min_id, le=max_id)):
     return dummy_data[item_id]
