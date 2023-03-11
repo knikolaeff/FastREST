@@ -43,10 +43,10 @@ async def get_item_by_id(
 
 @app.get("/catalog/query")
 async def get_item_by_author(name: Optional[str] = None):
-    for _, inner in dummy_data.items():
-        if inner.author == name:
-            return inner
-    return {"error": "Not Found"}
+    return next(
+        (inner for _, inner in dummy_data.items() if inner.author == name),
+        {"error": "Not Found"},
+    )
 
 # TODO find a way to combine /catalog/query and /catalog
 
